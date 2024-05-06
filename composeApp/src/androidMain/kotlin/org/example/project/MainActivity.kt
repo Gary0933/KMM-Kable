@@ -1,6 +1,7 @@
 package org.example.project
 
 import App
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -131,7 +132,11 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun onAdvertisementClicked(advertisement: AndroidAdvertisement) {
+        viewModel.stop()
 
+        val intent = Intent(this@MainActivity, SensorActivity::class.java)
+        intent.putExtra("Advertisement", advertisement.address)
+        startActivity(intent)
     }
 
     @Composable
