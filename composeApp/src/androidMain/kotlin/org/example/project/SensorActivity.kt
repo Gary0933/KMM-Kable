@@ -19,11 +19,9 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.contentColorFor
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import com.juul.sensortag.AppTheme
 
 
@@ -36,7 +34,7 @@ class SensorActivity : ComponentActivity()  {
 
         setContent {
             val advertisement = intent.getStringExtra("Advertisement").toString()
-            viewModel = SensorViewModel(application,advertisement); // 传入参数再实例化SensorViewModel
+            viewModel = SensorViewModel(application,advertisement) // 传入参数再实例化SensorViewModel
 
             AppTheme {
                 Column(
@@ -65,7 +63,7 @@ class SensorActivity : ComponentActivity()  {
                                 this@SensorActivity,
                                 viewModel.disconnectBluetooth(),
                                 Toast.LENGTH_SHORT
-                            ).show();
+                            ).show()
                         },
                         Modifier
                             .fillMaxWidth()

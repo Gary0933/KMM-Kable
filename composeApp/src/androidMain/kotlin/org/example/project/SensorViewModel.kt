@@ -1,7 +1,6 @@
 package org.example.project
 
 import android.app.Application
-import android.widget.Toast
 import com.juul.tuulbox.logging.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,7 +11,6 @@ import com.juul.kable.peripheral
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
@@ -123,6 +121,7 @@ class SensorViewModel(
         return currentBluetoothAddress
     }
 
+    /*
     fun clearedJob() {
         peripheralScope.launch {
             viewModelScope.coroutineContext.job.join()
@@ -130,5 +129,6 @@ class SensorViewModel(
             scope.cancel()
         }
     }
+    */
 
 }

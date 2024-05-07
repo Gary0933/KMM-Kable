@@ -1,4 +1,5 @@
 [versions]
+accompanistPermissions = "0.34.0"
 agp = "8.3.1"
 android-compileSdk = "34"
 android-minSdk = "24"
@@ -12,10 +13,16 @@ androidx-material = "1.11.0"
 androidx-test-junit = "1.1.5"
 compose = "1.6.6"
 compose-plugin = "1.6.2"
+core = "0.31.1"
 junit = "4.13.2"
 kotlin = "1.9.23"
+kotlinxCoroutinesAndroid = "1.8.0"
+kotlinxCoroutinesCore = "1.8.0"
+logging = "7.2.0"
 
 [libraries]
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
+core = { module = "com.juul.kable:core", version.ref = "core" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -28,6 +35,9 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
+logging = { module = "com.juul.tuulbox:logging", version.ref = "logging" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

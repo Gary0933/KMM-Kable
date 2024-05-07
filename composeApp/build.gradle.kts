@@ -35,8 +35,8 @@ kotlin {
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
 
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0") // Kable
-            implementation("com.google.accompanist:accompanist-permissions:0.34.0") // Kable
+            implementation(libs.kotlinx.coroutines.android) // Kable
+            implementation(libs.accompanist.permissions) // Kable
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -46,9 +46,9 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
 
-            api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0") // Kable
-            implementation("com.juul.kable:core:0.31.1") // Kable
-            implementation("com.juul.tuulbox:logging:7.2.0") // Kable log for debug
+            api(libs.kotlinx.coroutines.core) // Kable
+            implementation(libs.core) // Kable
+            implementation(libs.logging) // Kable log for debug
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
