@@ -1,7 +1,8 @@
 package org.example.project
 
+//import CHARACTERISTIC_UUID
+//import SERVICE_UUID
 import android.app.Application
-import com.juul.tuulbox.logging.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.juul.kable.Bluetooth
@@ -11,7 +12,6 @@ import com.juul.kable.peripheral
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
@@ -57,9 +57,6 @@ class SensorViewModel(
     private val manualDisconnect = MutableStateFlow(false)
     private val peripheral = scope.peripheral(bluetoothAddress) {
         autoConnectIf(autoConnect::value)
-        onServicesDiscovered {
-            // Perform any desired I/O operations.
-        }
     }
     private val state = combine(Bluetooth.availability, peripheral.state, ::Pair)
 
@@ -154,6 +151,24 @@ class SensorViewModel(
         return connectionStatus
     }
 
+  fun getBluetoothData() {
+        val services = peripheral.services ?: android.util.Log.d("K-Test", "Services have not been discovered")
+        android.util.Log.d("K-Test", "123")
+        //val observation = peripheral.observe(bluetoothCharacteristic)
+        //val data = peripheral.read(bluetoothCharacteristic)
+        //android.util.Log.d("K-Test", "BLE data : $data")
+    }
+
+    /*
+    private fun characteristicOf(service: Uuid, characteristic: Uuid) =
+        com.juul.kable.characteristicOf(service.toString(), characteristic.toString())
+
+    private val bluetoothCharacteristic = characteristicOf(
+        service = SERVICE_UUID,
+        characteristic = CHARACTERISTIC_UUID
+    )
+     */
+
     /*
     fun clearedJob() {
         peripheralScope.launch {
@@ -165,7 +180,7 @@ class SensorViewModel(
     */
 
     override fun onCleared() {
-        android.util.Log.d("Test Kable", "222")
+        android.util.Log.d("K-Test", "onCleared")
     }
 
 }

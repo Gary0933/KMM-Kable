@@ -98,6 +98,17 @@ class SensorActivity : ComponentActivity()  {
                         Text("Check Bluetooth Connection Status")
                     }
 
+                    Button(
+                        onClick = {
+                            viewModel.getBluetoothData()
+                        },
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp)
+                    ) {
+                        Text("Get Bluetooth Data")
+                    }
+
                 }
             }
         }
