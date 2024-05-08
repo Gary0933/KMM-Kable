@@ -11,6 +11,7 @@ import com.juul.kable.peripheral
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
@@ -25,6 +26,7 @@ import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import peripheralScope
 import kotlin.time.Duration.Companion.seconds
+
 
 private val reconnectDelay = 1.seconds
 
@@ -55,11 +57,16 @@ class SensorViewModel(
     private val manualDisconnect = MutableStateFlow(false)
     private val peripheral = scope.peripheral(bluetoothAddress) {
         autoConnectIf(autoConnect::value)
+        onServicesDiscovered {
+            // Perform any desired I/O operations.
+        }
     }
     private val state = combine(Bluetooth.availability, peripheral.state, ::Pair)
 
     init {
-        viewModelScope.enableAutoReconnect()
+        //android.util.Log.d("K-Test", "Manual Disconnect Flag : ${manualDisconnect.value}")
+        //getConnectionStatus()
+        //viewModelScope.enableAutoReconnect()
     }
 
     private fun CoroutineScope.enableAutoReconnect() {
@@ -67,7 +74,7 @@ class SensorViewModel(
             bluetoothAvailability == Bluetooth.Availability.Available && connectionState is State.Disconnected
         }.onEach {
             ensureActive()
-            Log.info { "Waiting $reconnectDelay to reconnect..." }
+            //Log.info { "Waiting $reconnectDelay to reconnect..." }
             delay(reconnectDelay)
             connect()
         }.launchIn(this)
@@ -75,28 +82,36 @@ class SensorViewModel(
 
     private fun CoroutineScope.connect() {
         launch {
-            Log.debug { "Connecting" }
+            //Log.debug { "Connecting" }
+            android.util.Log.d("K-Test", "Start to connect, current status : ${getConnectionStatus()}")
+
             try {
+                android.util.Log.d("K-Test", "Current Manual Disconnect Flag : ${manualDisconnect.value}")
                 if (!manualDisconnect.value) {
                     peripheral.connect()
                     autoConnect.value = true
+                    getConnectionStatus()
                 }
             } catch (e: ConnectionLostException) {
                 autoConnect.value = false
-                Log.warn(e) { "Connection attempt failed" }
+                //Log.warn(e) { "Connection attempt failed" }
             }
         }
     }
 
     private fun CoroutineScope.disconnect() {
         launch {
-
-            Log.debug { "Disconnect the bluetooth" }
+            autoConnect.value = false
+            manualDisconnect.value = true
+            //Log.debug { "Disconnect the bluetooth" }
             try {
+                android.util.Log.d("K-Test", "Start to disconnect")
                 peripheral.disconnect()
-
+                //scope.cancel()
+                getConnectionStatus()
             } catch (e: ConnectionLostException) {
-                Log.warn(e) { "Disconnection attempt failed" }
+                //Log.warn(e) { "Disconnection attempt failed" }
+                android.util.Log.d("K-Test", "Disconnection attempt failed")
             }
         }
     }
@@ -115,10 +130,28 @@ class SensorViewModel(
     }
 
     fun disconnectBluetooth(): String {
-        autoConnect.value = false
-        manualDisconnect.value = true
+        getConnectionStatus()
         viewModelScope.disconnect()
         return currentBluetoothAddress
+    }
+
+    fun connectBluetooth() {
+        manualDisconnect.value = false
+        android.util.Log.d("K-Test", "Manual Disconnect Flag : ${manualDisconnect.value}")
+        getConnectionStatus()
+        viewModelScope.enableAutoReconnect()
+    }
+
+    fun getConnectionStatus(): String {
+        val connectionStatus = when (peripheral.state.value) {
+            is State.Connecting -> "Connecting"
+            State.Connected -> "Connected"
+            State.Disconnecting -> "Disconnecting"
+            is State.Disconnected -> "Disconnected"
+            else -> return "Unknown Status"
+        }
+        android.util.Log.d("K-Test", "BLE Connection Status : ${connectionStatus}")
+        return connectionStatus
     }
 
     /*
@@ -130,5 +163,9 @@ class SensorViewModel(
         }
     }
     */
+
+    override fun onCleared() {
+        android.util.Log.d("Test Kable", "222")
+    }
 
 }

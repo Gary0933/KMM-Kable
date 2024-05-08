@@ -316,6 +316,9 @@ private fun BoxScope.StatusSnackbar(viewModel: ScanViewModel) {
             ScanStatus.Scanning -> "Scanning"
             ScanStatus.Stopped -> "Idle"
             is ScanStatus.Failed -> "Error: ${status.message}"
+            else -> {
+                "Unknown Status"
+            }
         }
         Snackbar(
             Modifier

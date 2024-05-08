@@ -59,6 +59,17 @@ class SensorActivity : ComponentActivity()  {
 
                     Button(
                         onClick = {
+                            viewModel.connectBluetooth()
+                        },
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp)
+                    ) {
+                        Text("Connect Bluetooth")
+                    }
+
+                    Button(
+                        onClick = {
                             Toast.makeText(
                                 this@SensorActivity,
                                 viewModel.disconnectBluetooth(),
@@ -72,6 +83,21 @@ class SensorActivity : ComponentActivity()  {
                         Text("Disconnect Bluetooth")
                     }
 
+                    Button(
+                        onClick = {
+                            Toast.makeText(
+                                this@SensorActivity,
+                                viewModel.getConnectionStatus(),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        },
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp)
+                    ) {
+                        Text("Check Bluetooth Connection Status")
+                    }
+
                 }
             }
         }
@@ -79,7 +105,11 @@ class SensorActivity : ComponentActivity()  {
 
     }
 
+    override fun onDestroy() {
+        android.util.Log.d("K-Test", "Activity Destroy")
+        super.onDestroy()
 
+    }
 
 
 
