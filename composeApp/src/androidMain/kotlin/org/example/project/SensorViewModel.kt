@@ -1,13 +1,13 @@
 package org.example.project
 
-//import CHARACTERISTIC_UUID
-//import SERVICE_UUID
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import bluetoothCharacteristic
 import com.juul.kable.Bluetooth
 import com.juul.kable.ConnectionLostException
 import com.juul.kable.State
+import com.juul.kable.descriptorOf
 import com.juul.kable.peripheral
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -61,7 +61,7 @@ class SensorViewModel(
     private val state = combine(Bluetooth.availability, peripheral.state, ::Pair)
 
     init {
-        //android.util.Log.d("K-Test", "Manual Disconnect Flag : ${manualDisconnect.value}")
+        android.util.Log.d("K-Test", "Manual Disconnect Flag : ${manualDisconnect.value}")
         //getConnectionStatus()
         //viewModelScope.enableAutoReconnect()
     }
@@ -87,6 +87,13 @@ class SensorViewModel(
                 if (!manualDisconnect.value) {
                     peripheral.connect()
                     autoConnect.value = true
+
+                    val observation = peripheral.observe(bluetoothCharacteristic)
+                    observation.collect { data ->
+                        android.util.Log.d("K-Test", "data count : ${data.size}")
+                    }
+                    //val data = peripheral.read(bluetoothCharacteristic)
+                    //android.util.Log.d("K-Test", "data : ${data.toHexString()}")
                     getConnectionStatus()
                 }
             } catch (e: ConnectionLostException) {
@@ -147,27 +154,26 @@ class SensorViewModel(
             is State.Disconnected -> "Disconnected"
             else -> return "Unknown Status"
         }
-        android.util.Log.d("K-Test", "BLE Connection Status : ${connectionStatus}")
+        android.util.Log.d("K-Test", "BLE Connection Status : $connectionStatus")
         return connectionStatus
     }
 
-  fun getBluetoothData() {
-        val services = peripheral.services ?: android.util.Log.d("K-Test", "Services have not been discovered")
-        android.util.Log.d("K-Test", "123")
-        //val observation = peripheral.observe(bluetoothCharacteristic)
-        //val data = peripheral.read(bluetoothCharacteristic)
-        //android.util.Log.d("K-Test", "BLE data : $data")
+    fun getBluetoothData() {
+        val services = peripheral.services
+        if (services != null) {
+            services.map { item ->
+                android.util.Log.d("K-Test", "Services UUID : ${item.serviceUuid}")
+            }
+        } else {
+            android.util.Log.d("K-Test", "Services have not been discovered")
+        }
+        val descriptor = descriptorOf(
+            service = "f0001130-0451-4000-b000-000000000000",
+            characteristic = "f0001133-0451-4000-b000-000000000000",
+            descriptor = "00002902-0000-1000-8000-00805f9b34fb"
+        )
+        android.util.Log.d("K-Test", "Descriptor Uuid : ${descriptor.descriptorUuid}")
     }
-
-    /*
-    private fun characteristicOf(service: Uuid, characteristic: Uuid) =
-        com.juul.kable.characteristicOf(service.toString(), characteristic.toString())
-
-    private val bluetoothCharacteristic = characteristicOf(
-        service = SERVICE_UUID,
-        characteristic = CHARACTERISTIC_UUID
-    )
-     */
 
     /*
     fun clearedJob() {
