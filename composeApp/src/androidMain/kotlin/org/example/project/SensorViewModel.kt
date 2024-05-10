@@ -90,7 +90,12 @@ class SensorViewModel(
 
                     val observation = peripheral.observe(bluetoothCharacteristic)
                     observation.collect { data ->
-                        android.util.Log.d("K-Test", "data count : ${data.size}")
+                        android.util.Log.d("K-Test", "data : ${data.contentToString()}")
+                        /*
+                        data.forEach { item ->
+                            android.util.Log.d("K-Test", "data item value : ${item.toUByte().toInt()}")
+                        }
+                        */
                     }
                     //val data = peripheral.read(bluetoothCharacteristic)
                     //android.util.Log.d("K-Test", "data : ${data.toHexString()}")
